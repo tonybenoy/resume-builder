@@ -14,7 +14,7 @@ pip install -r requirements.txt
 4. `tailor.json` file can be passed as is to an LLM model with the job description, keywords etc with the prompt of your choice to get the tailored information. I'm no prompt expert so the prompt is your choice.
 5. Run the script
 ```bash
-python resume_builder.py
+python builder.py
 ```
 6. The output will be a resume.pdf file in the same directory.
 
