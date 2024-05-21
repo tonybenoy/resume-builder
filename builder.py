@@ -5,7 +5,9 @@ from weasyprint import HTML
 # Load the JSON data
 with open('./resume_data.json') as f:
     resume_data = json.load(f)
-
+with open('./tailor.json') as f:
+    tailor_data = json.load(f)
+resume_data.update(tailor_data)
 # Set up the Jinja2 environment
 env = Environment(loader=FileSystemLoader('.'))
 template = env.get_template('resume_template.html')
