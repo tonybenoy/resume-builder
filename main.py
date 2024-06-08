@@ -1,4 +1,5 @@
 import os
+from turtle import title
 from builder import build_resume
 from parse_job import get_job_details_linkedin
 import json
@@ -6,8 +7,15 @@ import tempfile
 import subprocess
 import pyperclip
 
-url = input("Enter the linkedin URL: ")
-result=get_job_details_linkedin(url)
+url = input("Enter the linkedin URL(Press enter to enter manually): ")
+if url == "":
+    title=input("Enter the job title: ")
+    org_name=input("Enter the organization name: ")
+    job_description=input("Enter the job description: ")
+    url = input("Enter the job URL: ")
+    result={"job_title":title,"org_name":org_name,"job_description":job_description,"url":url}
+else:
+    result=get_job_details_linkedin(url)
 with open('./tailor.json') as f:
     tailor_data = json.load(f)
 with open('./prompt.json') as f:
@@ -47,23 +55,25 @@ except FileExistsError:
     pass
 
 try:
-    os.mkdir(f"resumes/{result['org_name']}/{result['job_title']}")
+    os.mkdir(path)
 except FileExistsError:
     pass
-with open(f"resumes/{result['org_name']}/{result['job_title']}/tailor.json", "w") as f:
+with open(f"{path}/tailor.json", "w") as f:
     json.dump(tailor_data, f)
+with open(f"{path}/jd.json", "w") as f:
+    json.dump(result, f)
 
 build_resume(tailor_data, path)
 
 print(f"Resume generated at {path}")
 notes = input("Enter any notes you want to save: ")
-with open(f"resumes/{result['org_name']}/{result['job_title']}/notes.txt", "w") as f:
+with open(f"{path}/notes.txt", "w") as f:
     f.write(notes)
 cl=input("Generate cover letter? (y/N)")
 if cl.lower() == "y":
     pyperclip.copy(resume_prompt["cover_letter"])
     print("Prompt copied to clipboard")
     cover_letter = get_text_from_editor()
-    with open(f"resumes/{result['org_name']}/{result['job_title']}/cover_letter.txt", "w") as f:
+    with open(f"{path}/cover_letter.txt", "w") as f:
         f.write(cover_letter)
     print(f"Cover letter generated at {path}")

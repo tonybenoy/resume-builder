@@ -10,13 +10,13 @@ git clone git@github.com:tonybenoy/resume-builder.git
 ```bash
 pip install -r requirements.txt
 ```
-3. Make the `resume_data.json` and `tailor.json` files with the required information. Use the sample files as a reference.
-4. `tailor.json` file can be passed as is to an LLM model with the job description, keywords etc with the prompt of your choice to get the tailored information. I'm no prompt expert so the prompt is your choice.
-5. Run the script
+3. Make the `resume_data.json` and `tailor.json` files with the required information. Use the sample files as a reference. Add your prompts to `prompts.json` file.
+4. Run the script
 ```bash
-python resume_builder.py
+python main.py
 ```
-6. The output will be a resume.pdf file in the same directory.
-
+5. Follow theinstructions to generate the resume.
+6. The prompts will be copied to the clipboard and can be passed to LLM of your choice. Make sure that your prompt asks for a json. Paste the json value in the editor(Edit as needed) and save.
+7. The generated resume will be saved in the `resume` folder.
 ## Custom templates
 You can convert your resume template to a jinja2 template with the help of an LLM model. I found passing the image more useful than the pdf but your results may vary. Passing the template here as reference for the model should give your a custom template for your resume.

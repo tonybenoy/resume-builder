@@ -14,7 +14,8 @@ def get_job_details_linkedin(link):
     result = {
         "job_title": job_title,
         "org_name": org_name,
-        "job_description": job_description
+        "job_description": job_description,
+        "url": link
     }
     driver.quit()
     return result
