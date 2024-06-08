@@ -22,7 +22,7 @@ with open('./prompt.json') as f:
     prompt = json.load(f)
 
 resume_prompt = prompt["resume"]
-prompt_final =f"{prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}"
+prompt_final =f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}"
 pyperclip.copy(prompt_final)
 print("Prompt copied to clipboard")
 def get_text_from_editor():
