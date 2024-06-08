@@ -9,6 +9,10 @@ readme = "README.md"
 python = "^3.10"
 weasyprint = "^62.1"
 jinja2 = "^3.1.4"
+selenium = "^4.21.0"
+webdriver-manager = "^4.0.1"
+bs4 = "^0.0.2"
+pyperclip = "^1.8.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.4.4"
