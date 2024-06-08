@@ -6,7 +6,7 @@ import json
 import tempfile
 import subprocess
 import pyperclip
-
+import platform
 url = input("Enter the linkedin URL(Press enter to enter manually): ")
 if url == "":
     title=input("Enter the job title: ")
@@ -77,3 +77,18 @@ if cl.lower() == "y":
     with open(f"{path}/cover_letter.txt", "w") as f:
         f.write(cover_letter)
     print(f"Cover letter generated at {path}")
+resume=f"{path}/resume.pdf"
+cover_letter=f"{path}/cover_letter.txt"
+
+if platform.system() == "Darwin":  # macOS
+    subprocess.Popen(["open", resume])
+    if cl.lower() == "y":
+        subprocess.Popen(["open", cover_letter])
+elif platform.system() == "Windows":  # Windows
+    subprocess.Popen(["start", resume], shell=True)
+    if cl.lower() == "y":
+        subprocess.Popen(["start", cover_letter], shell=True)
+else:  # Linux and other Unix-like systems
+    subprocess.Popen(["xdg-open", resume])
+    if cl.lower() == "y":
+        subprocess.Popen(["xdg-open", cover_letter])
