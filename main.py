@@ -71,7 +71,7 @@ with open(f"{path}/notes.txt", "w") as f:
     f.write(notes)
 cl=input("Generate cover letter? (y/N)")
 if cl.lower() == "y":
-    pyperclip.copy(resume_prompt["cover_letter"])
+    pyperclip.copy(prompt["cover_letter"])
     print("Prompt copied to clipboard")
     cover_letter = get_text_from_editor()
     with open(f"{path}/cover_letter.txt", "w") as f:
