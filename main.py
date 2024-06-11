@@ -2,17 +2,28 @@ import json
 import os
 import platform
 import subprocess
-import tempfile
+from typing import Optional
 
 import pyperclip
+import typer
+from typing_extensions import Annotated
 
-from builder import build_resume
+from builder import build_old, build_resume
 from parse_job import get_job_details_linkedin
+from utils import get_text_from_editor
+
+app = typer.Typer()
 
 
-def main():
-    url = input("Enter the linkedin URL(Press enter to enter manually): ")
-    if url == "":
+@app.command()
+def main(
+    url: Annotated[Optional[str], typer.Argument()] = None,
+    template=Annotated[str, typer.Option(help="Path to custom template")],
+    resume=Annotated[str, typer.Option(help="Path to custom resume data json file")],
+    tailor=Annotated[str, typer.Option(help="Path to custom tailor json file")],
+    prompt=Annotated[str, typer.Option(help="Path to custom prompt json file")],
+):
+    if not url:
         title = input("Enter the job title: ")
         org_name = input("Enter the organization name: ")
         job_description = input("Enter the job description: ")
@@ -29,24 +40,6 @@ def main():
     prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}"
     pyperclip.copy(prompt_final)
     print("Prompt copied to clipboard")
-
-    def get_text_from_editor():
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".txt") as tmp_file:
-            tmp_filename = tmp_file.name
-
-        if os.name == "nt":  # For Windows
-            editor = os.environ.get("EDITOR", "notepad.exe")
-        elif os.name == "posix":  # For macOS and Linux
-            editor = os.environ.get("EDITOR", "vim")
-
-        subprocess.call([editor, tmp_filename])
-
-        with open(tmp_filename, "r") as tmp_file:
-            content = tmp_file.read()
-
-        os.remove(tmp_filename)
-
-        return content
 
     tailored_json = get_text_from_editor()
     tailor_data.update(json.loads(tailored_json))
@@ -100,5 +93,18 @@ def main():
             subprocess.Popen(["xdg-open", cover_letter])
 
 
+@app.command()
+def build(path=Annotated[str, typer.Argument(help="Path to resume data json file")]):
+    if not os.path.exists(path):
+        raise typer.BadParameter(f"File {path} does not exist")
+    build_old(path)
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+
+    from typer.main import get_command, get_command_name
+
+    if len(sys.argv) == 1 or sys.argv[1] not in [get_command_name(key) for key in get_command(app).commands.keys()]:
+        sys.argv.insert(1, "main")
+    app()
