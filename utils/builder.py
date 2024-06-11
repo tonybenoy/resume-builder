@@ -5,7 +5,7 @@ from weasyprint import HTML
 
 
 # Load the JSON data
-def build_resume(tailor_data, path):
+def build_resume(tailor_data, path, html=""):
     with open("./resume_data.json") as f:
         resume_data = json.load(f)
     # with open('./tailor.json') as f:
@@ -19,7 +19,7 @@ def build_resume(tailor_data, path):
     html_content = template.render(**resume_data)
 
     # Save HTML content to a file
-    html_file_path = f"{path}/resume.html"
+    html_file_path = f"{path}/resume.html" if html == "" else html
     with open(html_file_path, "w") as f:
         f.write(html_content)
 

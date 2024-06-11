@@ -6,11 +6,12 @@ from typing import Optional
 
 import pyperclip
 import typer
+from pathvalidate import sanitize_filename
 from typing_extensions import Annotated
 
-from builder import build_old, build_resume
-from parse_job import get_job_details_linkedin
-from utils import get_text_from_editor
+from utils.builder import build_old, build_resume
+from utils.parse_job import get_job_details_linkedin
+from utils.utils import get_text_from_editor
 
 app = typer.Typer()
 
@@ -18,10 +19,10 @@ app = typer.Typer()
 @app.command()
 def main(
     url: Annotated[Optional[str], typer.Argument()] = None,
-    template=Annotated[str, typer.Option(help="Path to custom template")],
-    resume=Annotated[str, typer.Option(help="Path to custom resume data json file")],
-    tailor=Annotated[str, typer.Option(help="Path to custom tailor json file")],
-    prompt=Annotated[str, typer.Option(help="Path to custom prompt json file")],
+    html: Annotated[str, typer.Option(help="Path to custom template html with jinja2 placeholders")] = "",
+    resume: Annotated[str, typer.Option(help="Path to custom resume data json file")] = "",
+    tailor: Annotated[str, typer.Option(help="Path to custom tailor json file")] = "",
+    prompt: Annotated[str, typer.Option(help="Path to custom prompt json file")] = "",
 ):
     if not url:
         title = input("Enter the job title: ")
@@ -31,19 +32,19 @@ def main(
         result = {"job_title": title, "org_name": org_name, "job_description": job_description, "url": url}
     else:
         result = get_job_details_linkedin(url)
-    with open("./tailor.json") as f:
+    with open("./tailor.json" if tailor == "" else tailor) as f:
         tailor_data = json.load(f)
-    with open("./prompt.json") as f:
-        prompt = json.load(f)
+    with open("./prompt.json" if prompt == "" else prompt) as f:
+        prompt_json = json.load(f)
 
-    resume_prompt = prompt["resume"]
+    resume_prompt = prompt_json["resume"]
     prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}"
     pyperclip.copy(prompt_final)
     print("Prompt copied to clipboard")
 
     tailored_json = get_text_from_editor()
     tailor_data.update(json.loads(tailored_json))
-    path = f"resumes/{result['org_name']}/{result['job_title']}"
+    path = f"resumes/{sanitize_filename(result['org_name'])}/{sanitize_filename(result['job_title'])}"
     try:
         os.mkdir("resumes")
     except FileExistsError:
@@ -62,7 +63,7 @@ def main(
     with open(f"{path}/jd.json", "w") as f:
         json.dump(result, f)
 
-    build_resume(tailor_data, path)
+    build_resume(tailor_data, path, html)
 
     print(f"Resume generated at {path}")
     notes = input("Enter any notes you want to save: ")
@@ -70,7 +71,7 @@ def main(
         f.write(notes)
     cl = input("Generate cover letter? (y/N)")
     if cl.lower() == "y":
-        pyperclip.copy(prompt["cover_letter"])
+        pyperclip.copy(prompt_json["cover_letter"])
         print("Prompt copied to clipboard")
         cover_letter = get_text_from_editor()
         with open(f"{path}/cover_letter.txt", "w") as f:
