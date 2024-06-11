@@ -28,3 +28,14 @@ def build_resume(tailor_data, path):
     HTML(html_file_path).write_pdf(pdf_file_path)
 
     print("PDF generated successfully.")
+
+
+def build_old(path):
+    with open(f"{path}/tailor.json") as f:
+        tailor_data = json.load(f)
+    build_resume(tailor_data, path)
+
+
+if __name__ == "__main__":
+    path = input("Enter the path of the resume folder: ")
+    build_old(path)

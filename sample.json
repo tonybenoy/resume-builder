@@ -21,15 +21,5 @@
             "dates": "Aug '21 — Jun '23",
             "location": "Dolor, Consectetur"
         }
-    ],
-    "projects": [
-        {
-            "name": "Lorem Project 1",
-            "link": "https://example.com/project1"
-        },
-        {
-            "name": "Lorem Project 2",
-            "link": "https://example.com/project2"
-        }
     ]
 }
