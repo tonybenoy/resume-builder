@@ -13,6 +13,11 @@
             padding: 0;
         }
 
+        @page {
+            size: A4;
+            margin: 0.3in;
+        }
+
         h1 {
             color: rgb(0, 120, 108);
             margin: 0;
@@ -36,11 +41,12 @@
             margin-top: 10px;
             border-bottom: 1px solid rgb(0, 120, 108);
             padding-bottom: 0px;
+            margin-bottom: 0px;
         }
 
         .job-title {
             font-weight: bold;
-            margin: 5px 0;
+            margin: 0;
         }
 
         .company {
@@ -83,7 +89,9 @@
         <p class="job-title">{{title }}</p>
         <div class="contact-info">
             <p>{{ header.phone }} | <a href="mailto:{{ header.email }}">{{ header.email }}</a> | {{ header.location
-                }} | <a href="{{ header.linkedin }}">LinkedIn</a> | <a href="{{ header.github }}">GitHub</a></p>
+                }} | <a href="{{ header.linkedin }}">{{header.linkedin}}</a> | <a
+                    href="{{ header.github }}">{{header.github}}</a>
+            </p>
         </div>
     </div>
 
@@ -106,7 +114,15 @@
         <div class="clear"></div>
         {% endfor %}
     </div>
-
+    <div class="education">
+        <h2 class="section-title">EDUCATION</h2>
+        {% for edu in education %}
+        <p class="job-title">{{ edu.degree }} <span class="date-location">{{ edu.dates }}<br>{{ edu.location }}</span>
+        </p>
+        <p class="company">{{ edu.institution }}</p>
+        <div class="clear"></div>
+        {% endfor %}
+    </div>
     <div class="skills">
         <h2 class="section-title">SKILLS</h2>
         <ul>
@@ -116,7 +132,7 @@
         </ul>
     </div>
 
-
+    {% if project %}
     <div class="projects">
         <h2 class="section-title">PROJECTS</h2>
         <ul>
@@ -134,7 +150,7 @@
             {% endfor %}
         </ul>
     </div>
-
+    {% endif %}
 </body>
 
 </html>
