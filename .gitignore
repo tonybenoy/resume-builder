@@ -165,3 +165,4 @@ tailor.json
 resumes/
 .ruff_cache/
 prompt.json
+jsonresume.json

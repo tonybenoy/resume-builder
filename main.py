@@ -27,7 +27,9 @@ def main(
     if not url:
         title = input("Enter the job title: ")
         org_name = input("Enter the organization name: ")
-        job_description = input("Enter the job description: ")
+        typer.echo("Enter the job description in the text editor. Save and exit. Press enter to continue.")
+        input()
+        job_description = get_text_from_editor()
         url = input("Enter the job URL: ")
         result = {"job_title": title, "org_name": org_name, "job_description": job_description, "url": url}
     else:
@@ -38,10 +40,12 @@ def main(
         prompt_json = json.load(f)
 
     resume_prompt = prompt_json["resume"]
-    prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}"
+    prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}. Return the same json and add no extra keys such as education etc as they are handled externally."
     pyperclip.copy(prompt_final)
-    print("Prompt copied to clipboard")
-
+    typer.echo(
+        "Prompt is copied to the clipboard. Enter the JSON from the model in the text editor. Save and exit. Press enter to continue."
+    )
+    input()
     tailored_json = get_text_from_editor()
     tailor_data.update(json.loads(tailored_json))
     path = f"resumes/{sanitize_filename(result['org_name'])}/{sanitize_filename(result['job_title'])}"
