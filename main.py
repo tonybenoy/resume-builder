@@ -10,7 +10,7 @@ from pathvalidate import sanitize_filename
 from typing_extensions import Annotated
 
 from utils.builder import build_old, build_resume
-from utils.parse_job import get_job_details_linkedin
+from utils.parse_job import get_job_details
 from utils.utils import get_text_from_editor
 
 app = typer.Typer()
@@ -33,14 +33,14 @@ def main(
         url = input("Enter the job URL: ")
         result = {"job_title": title, "org_name": org_name, "job_description": job_description, "url": url}
     else:
-        result = get_job_details_linkedin(url)
+        result = get_job_details(url)
     with open("./tailor.json" if tailor == "" else tailor) as f:
         tailor_data = json.load(f)
     with open("./prompt.json" if prompt == "" else prompt) as f:
         prompt_json = json.load(f)
 
     resume_prompt = prompt_json["resume"]
-    prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. The data to tailor is{ tailor_data}. Return the same json and add no extra keys such as education etc as they are handled externally."
+    prompt_final = f"{resume_prompt}.The job title is '{result['job_title']}' at {result['org_name']}. The job description is: {result['job_description']}. GO the company's website, careers page and information and also the job description page. Use that infomration to make resume more appropriate.The data to tailor is{ tailor_data}. The data is in json form and has the skills,experiene and the summary. Return the same json and add no extra keys such as education etc as they are handled externally."
     pyperclip.copy(prompt_final)
     typer.echo(
         "Prompt is copied to the clipboard. Enter the JSON from the model in the text editor. Save and exit. Press enter to continue."

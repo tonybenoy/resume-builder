@@ -11,9 +11,9 @@ git clone git@github.com:tonybenoy/resume-builder.git
 pip install -r requirements.txt
 ```
 3. Make the `resume_data.json` and `tailor.json` files with the required information. Use the sample files as a reference. Add your prompts to `prompts.json` file.
-4. Run the script with the linkedin url for the job you are applying for. If you do not provide a linkedin url(Make sure that it is a direct url for the job), the script will ask for details manually
+4. Run the script with the linkedin or meetfrank url for the job you are applying for. If you do not provide a linkedin/meetfrank url(Make sure that it is a direct url for the job), the script will ask for details manually
 ```bash
-python main.py <linkedin url for job>
+python main.py < url for job>
 ```
 or
 ```bash
