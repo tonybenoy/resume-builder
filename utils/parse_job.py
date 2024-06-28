@@ -29,7 +29,12 @@ def get_job_details_linkedin(link):
     )
     button.click()
     job_description = driver.find_element(By.CSS_SELECTOR, ".show-more-less-html__markup.relative.overflow-hidden").text
-    result = {"job_title": job_title, "org_name": org_name, "job_description": job_description, "url": link}
+    result = {
+        "job_title": job_title.strip(),
+        "org_name": org_name.strip(),
+        "job_description": job_description,
+        "url": link,
+    }
     driver.quit()
     return result
 
@@ -50,14 +55,10 @@ def get_job_details_meetfrank(link):
 
     job_description = driver.find_element(By.CSS_SELECTOR, ".opening-descriptions").text
     result = {
-        "job_title": job_title,
-        "org_name": org_name,
+        "job_title": job_title.strip(),
+        "org_name": org_name.strip(),
         "job_description": job_description,
         "url": driver.current_url,
     }
     driver.quit()
     return result
-
-
-if __name__ == "__main__":
-    print(get_job_details_meetfrank("https://meetfrank.com/jobs/helmes/progress-openedge-developer"))
